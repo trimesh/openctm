@@ -61,13 +61,26 @@ def build_windows(lib_name: str = "openctm.dll") -> dict:
     # remove any prior built artifacts from the library
     subprocess.check_call(["git", "clean", "-xdf"], cwd=ctm_lib)
     # run in the windows environment
-    subprocess.check_call(' '.join(["make", "-f", "Makefile.msvc"]), cwd=ctm_lib, shell=True)
+    subprocess.check_call(["nmake", "/f", "Makefile.msvc"], cwd=ctm_lib)
 
     with open(os.path.join(ctm_lib, lib_name), "rb") as f:
         return {lib_name: f.read()}
 
 
-def to_wheel(libs: dict):
+def to_wheel(libs: dict) -> dict:
+    """
+    Run `pip wheel` and inject the content of `libs`
+
+    Parameters
+    -----------
+    libs
+      Keyed {file_name: bytes}
+
+    Returns
+    --------
+    wheels
+      Keyed {file_name: bytes-of-wheel}
+    """
     with tempfile.TemporaryDirectory() as tmp:
         subprocess.check_call(["pip", "wheel", ".", f"--wheel-dir={tmp}"])
 
