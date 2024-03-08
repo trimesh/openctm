@@ -31,17 +31,19 @@
 import ctypes
 
 import os
-
+import platform
 import numpy as np
 
 _cwd = os.path.abspath(os.path.dirname(__file__))
-if os.name == "nt":
+_system = platform.system()
+if _system == "Windows":
     _ctm_lib = ctypes.WinDLL(os.path.join(_cwd, "openctm.dll"))
-elif os.name == "posix":
+elif _system == "Linux":
     # hardcode the support library to the location from the wheel
     _ctm_lib = ctypes.CDLL(os.path.join(_cwd, "libopenctm.so"))
-elif os.name == 'darwin':
+elif _system == "Darwin":
     _ctm_lib = ctypes.CDLL(os.path.join(_cwd, "libopenctm.dylib"))
+
 
 def load_ctm(file_obj, file_type=None, **kwargs):
     """

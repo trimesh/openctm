@@ -67,6 +67,19 @@ def build_windows(lib_name: str = "openctm.dll") -> dict:
         return {lib_name: f.read()}
 
 
+def build_mac(lib_name: str = "openctm.dylib") -> dict:
+    """
+    Build in a Mac environment.
+    """
+    # remove any prior built artifacts from the library
+    subprocess.check_call(["git", "clean", "-xdf"], cwd=ctm_lib)
+    # run in the mac environment
+    subprocess.check_call(["make", "-f", "Makefile.macosx"], cwd=ctm_lib)
+
+    with open(os.path.join(ctm_lib, lib_name), "rb") as f:
+        return {lib_name: f.read()}
+
+
 def to_wheel(libs: dict) -> dict:
     """
     Run `pip wheel` and inject the content of `libs`
@@ -127,6 +140,16 @@ def main(wheelhouse=None):
         # keep the `none` ABI
         # replace the `any` platform with windows
         tag_platform = "win_amd64"
+        tag_new = tag_none.replace("any", tag_platform)
+        with open(os.path.join(wheelhouse, tag_new), "wb") as f:
+            f.write(wheel[tag_none])
+    elif platform.system() == "Darwin":
+        wheel = to_wheel(build_mac())
+        tag_none = next(iter(wheel.keys()))
+        # keep the `none` ABI
+        # replace the `any` platform with mac
+        # TODO : check to make sure this wasn't an ARM!
+        tag_platform = "macosx_10_9_x86_64"
         tag_new = tag_none.replace("any", tag_platform)
         with open(os.path.join(wheelhouse, tag_new), "wb") as f:
             f.write(wheel[tag_none])
