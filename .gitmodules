@@ -1,0 +1,3 @@
+[submodule "OpenCTM"]
+	path = upstream/OpenCTM
+	url = https://github.com/Danny02/OpenCTM.git

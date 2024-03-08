@@ -1,0 +1,58 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools >= 61.0", "wheel"]
+
+[project]
+name = "openctm"
+version = "0.0.1"
+requires-python = ">=3.7"
+authors = [{name = "Michael Dawson-Haggerty", email = "mikedh@kerfed.com"}]
+license = {file = "LICENSE.md"}
+description = "Provide a loader for OpenCTM files"
+keywords = ["graphics", "OpenCTM"]
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Natural Language :: English",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Multimedia :: Graphics :: 3D Modeling"
+]
+urls = {Homepage = "https://github.com/trimesh/cascadio"}
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[tool.setuptools]
+packages = [
+    "openctm",
+]
+
+[project.optional-dependencies]
+tests = ["pytest", "trimesh"]
+
+[tool.cibuildwheel]
+# `yum` would need to be replaced in the `before-all`
+# script before the musl linux can build OpenCASCADE
+skip = "*musl*"
+
+[tool.cibuildwheel.linux]
+# build OCCT on linux from source on the manylinux image
+before-all = [
+'cd OpenCTM',
+'git clean -xdf',
+'cd lib',
+'make -f Makefile.linux'
+]
+
+test-extras = "tests"
+test-command = "pytest {project}/tests"
+
+# point auditwheel at the OCCT libraries
+repair-wheel-command = "LD_LIBRARY_PATH=/project/OpenCTM/lib auditwheel repair --lib-sdir . -w {dest_dir} {wheel}"
