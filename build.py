@@ -67,7 +67,7 @@ def build_windows(lib_name: str = "openctm.dll") -> dict:
         return {lib_name: f.read()}
 
 
-def build_mac(lib_name: str = "openctm.dylib") -> dict:
+def build_mac(lib_name: str = "libopenctm.dylib") -> dict:
     """
     Build in a Mac environment.
     """
