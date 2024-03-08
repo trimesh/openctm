@@ -40,7 +40,8 @@ if os.name == "nt":
 elif os.name == "posix":
     # hardcode the support library to the location from the wheel
     _ctm_lib = ctypes.CDLL(os.path.join(_cwd, "libopenctm.so"))
-
+elif os.name == 'darwin':
+    _ctm_lib = ctypes.CDLL(os.path.join(_cwd, "libopenctm.dylib"))
 
 def load_ctm(file_obj, file_type=None, **kwargs):
     """

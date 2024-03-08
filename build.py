@@ -61,7 +61,7 @@ def build_windows(lib_name: str = "openctm.dll") -> dict:
     # remove any prior built artifacts from the library
     subprocess.check_call(["git", "clean", "-xdf"], cwd=ctm_lib)
     # run in the windows environment
-    subprocess.check_call(["make", "-f", "Makefile.msvc"], cwd=ctm_lib)
+    subprocess.check_call(' '.join(["make", "-f", "Makefile.msvc"]), cwd=ctm_lib, shell=True)
 
     with open(os.path.join(ctm_lib, lib_name), "rb") as f:
         return {lib_name: f.read()}
