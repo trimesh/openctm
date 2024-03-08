@@ -22,8 +22,6 @@ jobs:
         with:
           python-version: "3.12"
       - uses: ilammy/msvc-dev-cmd@v1.13.0
-        with:
-          vsversion: "2008"
       - name: Build Wheels 
         run: python build.py
       - uses: actions/upload-artifact@v2
