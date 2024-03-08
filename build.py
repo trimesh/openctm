@@ -11,9 +11,7 @@ do some level of manual wangling here.
 - build the wheel with `pip wheel`
 - build the library for the current platform using subprocess
 - inject the library into the wheel
-- fix the wheel tags to be py3
-
-
+- fix the wheel tags to be `py3-none-{platform}`
 """
 import os
 import zipfile
@@ -65,7 +63,7 @@ def to_wheel(libs: dict):
         # append the requested libraries to the zip archive
         with zipfile.ZipFile(file_name, 'a') as zipped:
             for lib, raw in libs.items():
-                zipped.writestr(f'openctm./{lib}', raw)
+                zipped.writestr(f'openctm/{lib}', raw)
             
         with open(file_name, 'rb') as f:
             return {wheel_name: f.read()}
