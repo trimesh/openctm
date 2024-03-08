@@ -36,13 +36,12 @@ import numpy as np
 
 _cwd = os.path.abspath(os.path.dirname(__file__))
 if os.name == "nt":
-    _ctm_lib = ctypes.WinDLL(
-        os.path.join(_cwd, 'libopenctm.dll'))
-elif os.name == 'posix':
+    _ctm_lib = ctypes.WinDLL(os.path.join(_cwd, "openctm.dll"))
+elif os.name == "posix":
     # hardcode the support library to the location from the wheel
-    _ctm_lib = ctypes.CDLL(
-        os.path.join(_cwd, 'libopenctm.so'))
-    
+    _ctm_lib = ctypes.CDLL(os.path.join(_cwd, "libopenctm.so"))
+
+
 def load_ctm(file_obj, file_type=None, **kwargs):
     """
     Load OpenCTM files from a file object.
@@ -126,9 +125,9 @@ def load_ctm(file_obj, file_type=None, **kwargs):
     vertex_count = ctmGetInteger(ctm, CTM_VERTEX_COUNT)
     vertex_ctm = ctmGetFloatArray(ctm, CTM_VERTICES)
     # use fromiter to avoid loop
-    vertices = np.fromiter(vertex_ctm, dtype=np.float64, count=vertex_count * 3).reshape(
-        (-1, 3)
-    )
+    vertices = np.fromiter(
+        vertex_ctm, dtype=np.float64, count=vertex_count * 3
+    ).reshape((-1, 3))
     # get faces
     face_count = ctmGetInteger(ctm, CTM_TRIANGLE_COUNT)
     face_ctm = ctmGetIntegerArray(ctm, CTM_INDICES)
