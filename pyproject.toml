@@ -25,6 +25,8 @@ classifiers = [
 ]
 urls = {Homepage = "https://github.com/trimesh/openctm"}
 
+dependencies = ["numpy"]
+
 [project.readme]
 file = "README.md"
 content-type = "text/markdown"
