@@ -94,11 +94,23 @@ def to_wheel(libs: dict) -> dict:
     wheels
       Keyed {file_name: bytes-of-wheel}
     """
+    import tomllib
+
+    with open(os.path.join(cwd, "pyproject.toml"), 'rb') as f:
+        pyproject = tomllib.load(f)
+
+    name = pyproject["project"]["name"]
+
     with tempfile.TemporaryDirectory() as tmp:
         subprocess.check_call(["pip", "wheel", ".", f"--wheel-dir={tmp}"])
+        wheel_name = next(
+            iter(
+                item
+                for item in os.listdir(tmp)
+                if item.startswith(name) and item.lower().endswith(".whl")
+            )
+        )
 
-        # there should only be one file in this temp directory
-        wheel_name = os.listdir(tmp)[-1]
         file_name = os.path.join(tmp, wheel_name)
         assert file_name.endswith(".whl")
 
